@@ -9,7 +9,8 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                          std=[0.229, 0.224, 0.225])
 ])
-device=torch.device('cuda')
+device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(device)
 train_dataset = datasets.ImageFolder('d:/microbify/weinreebe/kaggle/train', transform=transform)
 train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
 
