@@ -1,6 +1,12 @@
 import os
 from flask import Flask, request, redirect, url_for, render_template, flash
 from werkzeug.utils import secure_filename
+import torch
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+import torch.nn as nn
+import torchvision.models as models
+from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Needed for flashing messages
@@ -17,34 +23,25 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# @app.before_first_request
-# def initialize_model():
-#     from torchvision import datasets, transforms
-#     from torch.utils.data import DataLoader
-#     import torch
-#     # https://data.mendeley.com/datasets/j4xs3kh3fd/2
-#     transform = transforms.Compose([
-#         transforms.Resize((224, 224)),
-#         transforms.RandomHorizontalFlip(),
-#         transforms.ToTensor(),
-#         transforms.Normalize(mean=[0.485, 0.456, 0.406],
-#                             std=[0.229, 0.224, 0.225])
-#     ])
-#     device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#     print(device)
-#     train_dataset = datasets.ImageFolder('d:/microbify/weinreebe/kaggle/train', transform=transform)
-#     train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
+# Initialize the model
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])
+])
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(device)
+train_dataset = datasets.ImageFolder('/Users/apple/Documents/grape_disease_test/dataset/train', transform=transform)
+train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
 
-#     import torch.nn as nn
-#     import torchvision.models as models
+model = models.resnet18(pretrained=True)
+num_ftrs = model.fc.in_features
+# Adjust the final layer to the number of classes in your dataset.
+model.fc = nn.Linear(num_ftrs, 4)  # num_classes is the number of disease categories
 
-#     model = models.resnet18(pretrained=True)
-#     num_ftrs = model.fc.in_features
-#     # Adjust the final layer to the number of classes in your dataset.
-#     model.fc = nn.Linear(num_ftrs, 4)  # num_classes is the number of disease categories
-
-#     model = model.to(device)
-
+model = model.to(device)
 
 @app.route('/')
 def index():
@@ -64,43 +61,32 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(path)
-            # put into the model
-            # model processes the image and classifies it
 
+            # Open the image using PIL
+            image = Image.open(path).convert('RGB')
 
-# from PIL import Image
+            # Apply the same transforms used for training
+            image_transformed = transform(image)
 
-# # Specify the path to the single image
-# image_path = 'd:/microbify/weinreebe/kaggle/single_image.jpg'
+            # Add a batch dimension since our model expects a 4D tensor (batch_size, channels, height, width)
+            image_transformed = image_transformed.unsqueeze(0).to(device)
 
-# # Open the image using PIL
-# image = Image.open(image_path).convert('RGB')
+            # Set the model to evaluation mode
+            model.eval()
 
-# # Apply the same transforms used for training
-# image_transformed = transform(image)
+            # Perform inference without tracking gradients
+            with torch.no_grad():
+                outputs = model(image_transformed)
+                # Get the predicted class index
+                _, predicted = torch.max(outputs, 1)
 
-# # Add a batch dimension since our model expects a 4D tensor (batch_size, channels, height, width)
-# image_transformed = image_transformed.unsqueeze(0).to(device)
+            # If you want to see the corresponding class name, you can use the classes attribute from your dataset
+            predicted_class = train_dataset.classes[predicted.item()]
+            print(f"Predicted class: {predicted_class}")
 
-# # Set the model to evaluation mode
-# model.eval()
-
-# # Perform inference without tracking gradients
-# with torch.no_grad():
-#     outputs = model(image_transformed)
-#     # Get the predicted class index
-#     _, predicted = torch.max(outputs, 1)
-
-# # If you want to see the corresponding class name, you can use the classes attribute from your dataset
-# predicted_class = train_dataset.classes[predicted.item()]
-# print(f"Predicted class: {predicted_class}")
-
-            # return the result
-
-            flash('File successfully uploaded')
-
+            flash(f'File successfully uploaded and classified as: {predicted_class}')
             return redirect(url_for('index'))
         else:
             flash('Allowed file types are png, jpg, jpeg, gif')

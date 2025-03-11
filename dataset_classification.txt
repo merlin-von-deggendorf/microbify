@@ -1,0 +1,5 @@
+folders:
+class1 == black_rot
+class2 == esca
+class3 == healthy
+class4 == leaf_blight

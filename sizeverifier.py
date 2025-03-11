@@ -28,4 +28,4 @@ def main(folder):
                 else:
                     print(f"{full_path}: Invalid JPEG")
 
-main('d:/microbify/scidb/')
+main('/Users/apple/Documents/Git_grapeDisease_test/microbify/scidb/')
