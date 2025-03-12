@@ -9,7 +9,6 @@ import os
 # Disable SSL verification
 ssl._create_default_https_context = ssl._create_unverified_context
 
-# https://data.mendeley.com/datasets/j4xs3kh3fd/2
 # decrease the resolution
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
