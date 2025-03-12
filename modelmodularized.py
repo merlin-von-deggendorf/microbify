@@ -4,9 +4,10 @@ import torch.optim as optim
 import torchvision.models as models
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from PIL import Image
 
 class ClassificationModel:
-    def __init__(self,devicestr=None, num_classes=4, lr=0.001):
+    def __init__(self, devicestr=None, num_classes=4, lr=0.001):
         # Set up device
         if devicestr is None:
             self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -31,32 +32,7 @@ class ClassificationModel:
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)    
     
-    def train(self,train_dir,batch_size, num_epochs=1):
-        """
-        Trains the image classification model using data from a specified directory.
-        This method sets up the training data using the ImageFolder dataset and applies the provided
-        transformations to preprocess the images. It then iterates over the data for a given number of epochs,
-        performing the following steps for each batch:
-            - Moves the input data and labels to the correct device.
-            - Clears previous gradients.
-            - Computes the model's outputs using a forward pass.
-            - Evaluates the loss between the outputs and the true labels.
-            - Performs backpropagation to compute gradients.
-            - Updates the model parameters using the optimizer.
-            - Tracks and prints the training progress by showing the iteration count and current loss.
-        The model in this context is designed to classify images into various categories, learning from the 
-        provided training dataset. The function prints intermediate progress for each iteration as well as 
-        the average loss per epoch.
-        Parameters:
-            train_dir (str): Path to the directory containing the training images arranged in subdirectories 
-                             corresponding to class labels.
-            batch_size (int): Number of samples per batch during training.
-            num_epochs (int, optional): Number of times the entire training dataset is passed through the model. 
-                                        Defaults to 1.
-        Returns:
-            None
-        """
-        
+    def train(self, train_dir, batch_size, num_epochs=1):
         # Prepare datasets and dataloaders
         self.train_dataset = datasets.ImageFolder(train_dir, transform=self.transform)
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
@@ -78,8 +54,7 @@ class ClassificationModel:
                 running_loss += loss.item()
             print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss / total_iterations}")
     
-    def evaluate(self,test_dir,batch_size,):
-        
+    def evaluate(self, test_dir, batch_size):
         self.test_dataset = datasets.ImageFolder(test_dir, transform=self.transform)
         self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False)
         self.model.eval()
@@ -98,17 +73,51 @@ class ClassificationModel:
     def save_model(self, save_path):
         torch.save(self.model.state_dict(), save_path)
     
+    def predict_single_image(self, image_path):
+        """
+        Classifies a single image and returns the predicted class.
+        
+        Parameters:
+            image_path (str): Path to the input image.
+            
+        Returns:
+            str: Predicted class label.
+        """
+        # Open the image and apply transformations
+        image = Image.open(image_path).convert('RGB')
+        image_transformed = self.transform(image)
+        # Add a batch dimension
+        image_transformed = image_transformed.unsqueeze(0).to(self.device)
+        
+        self.model.eval()
+        with torch.no_grad():
+            outputs = self.model(image_transformed)
+            _, predicted = torch.max(outputs, 1)
+        
+        # Assume the model was trained with ImageFolder where classes attribute exists.
+        predicted_class = self.train_dataset.classes[predicted.item()]
+        print(f"Predicted class: {predicted_class}")
+        return predicted_class
+
 def train_and_save_model():
     train_dir = 'd:/microbify/weinreebe/kaggle/train'
     test_dir = 'd:/microbify/weinreebe/kaggle/test'
     model_instance = ClassificationModel()
     model_instance.train(train_dir, batch_size=256, num_epochs=1)
     model_instance.save_model('d:/microbify/weinreebe/kaggle/model.pth')
+
 def load_and_evaluate_model():
     test_dir = 'd:/microbify/weinreebe/kaggle/test'
     model_instance = ClassificationModel()
     model_instance.model.load_state_dict(torch.load('d:/microbify/weinreebe/kaggle/model.pth'))
     model_instance.evaluate(test_dir, batch_size=256)
+
 # Example usage:
 if __name__ == '__main__':
-    load_and_evaluate_model()
+    # For evaluating the model
+    load_and_evaluate_model()  
+    # For predicting a single image, make sure to call predict_single_image with the image path
+    # Example:
+    # classifier = ClassificationModel()
+    # classifier.train_dataset = datasets.ImageFolder('d:/microbify/weinreebe/kaggle/train', transform=classifier.transform)
+    # classifier.predict_single_image('d:/microbify/weinreebe/kaggle/single_image.jpg')
