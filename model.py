@@ -87,7 +87,7 @@ with torch.no_grad():
         print(f"Accuracy: {100 * correct / total}")
 
 # Specify the path to the single image
-image_path = '/Users/apple/Documents/Git_grapeDisease_test/microbify/uploads/esca_IFV_1.jpg'
+image_path = '/Users/apple/Documents/Git_grapeDisease_test/microbify/uploads/0176028.jpg'
 
 # Open the image using PIL
 image = Image.open(image_path).convert('RGB')
