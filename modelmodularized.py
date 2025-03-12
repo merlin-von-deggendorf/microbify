@@ -5,22 +5,27 @@ import torchvision.models as models
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from PIL import Image
+import os
+import tkinter as tk
+from tkinter import filedialog
 
 class ClassificationModel:
     def __init__(self, devicestr=None, num_classes=4, lr=0.001):
         # Set up device
+        self.num_classes = num_classes
         if devicestr is None:
             self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         else:
             self.device = torch.device(devicestr)
-        # Define transforms
         self.transform = transforms.Compose([
-            transforms.Resize((224, 224)),
+            transforms.Resize(256),            # Resize the smaller edge to 256 while keeping the aspect ratio.
+            transforms.CenterCrop(224),        # Crop the center 224x224 region.
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
+                                std=[0.229, 0.224, 0.225])
         ])
+
         
         # Initialize the model with a pretrained ResNet18 and adjust the final layer
         self.model = models.resnet18(pretrained=True)
@@ -33,7 +38,7 @@ class ClassificationModel:
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)    
     
     def train(self, train_dir, batch_size, num_epochs=1):
-        # Prepare datasets and dataloaders
+        # ...existing code to train...
         self.train_dataset = datasets.ImageFolder(train_dir, transform=self.transform)
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
         for epoch in range(num_epochs):
@@ -55,6 +60,7 @@ class ClassificationModel:
             print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss / total_iterations}")
     
     def evaluate(self, test_dir, batch_size):
+        # ...existing code to evaluate...
         self.test_dataset = datasets.ImageFolder(test_dir, transform=self.transform)
         self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False)
         self.model.eval()
@@ -70,54 +76,81 @@ class ClassificationModel:
                 correct += (predicted == labels).sum().item()
                 print(f"Accuracy: {100 * correct / total}")
     
-    def save_model(self, save_path):
+    def save_model(self, name):
+        save_path = 'models/' + name + '.pth'
         torch.save(self.model.state_dict(), save_path)
     
-    def predict_single_image(self, image_path):
+    def load_model(self, name):
         """
-        Classifies a single image and returns the predicted class.
+        Loads model weights using the given name and sets the model to evaluation mode.
         
         Parameters:
-            image_path (str): Path to the input image.
-            
-        Returns:
-            str: Predicted class label.
+            name (str): Name of the saved model (without path or extension).
         """
-        # Open the image and apply transformations
-        image = Image.open(image_path).convert('RGB')
-        image_transformed = self.transform(image)
-        # Add a batch dimension
-        image_transformed = image_transformed.unsqueeze(0).to(self.device)
+        load_path = 'models/' + name + '.pth'
+        if not os.path.exists(load_path):
+            return False
+        self.model.load_state_dict(torch.load(load_path))
+        return True
+    
+    def classify_image(self, image_path):
+        """
+        Classifies a single image and returns the predicted class as an integer.
         
+        Parameters:
+            image_path (str): Path to the image file.
+        
+        Returns:
+            int: Predicted class label.
+        """
+        image = Image.open(image_path).convert("RGB")
+        image = self.transform(image).unsqueeze(0)  # Add batch dimension
         self.model.eval()
         with torch.no_grad():
-            outputs = self.model(image_transformed)
+            outputs = self.model(image.to(self.device))
             _, predicted = torch.max(outputs, 1)
-        
-        # Assume the model was trained with ImageFolder where classes attribute exists.
-        predicted_class = self.train_dataset.classes[predicted.item()]
-        print(f"Predicted class: {predicted_class}")
-        return predicted_class
+        return predicted.item()
+    
 
-def train_and_save_model():
-    train_dir = 'd:/microbify/weinreebe/kaggle/train'
-    test_dir = 'd:/microbify/weinreebe/kaggle/test'
-    model_instance = ClassificationModel()
-    model_instance.train(train_dir, batch_size=256, num_epochs=1)
-    model_instance.save_model('d:/microbify/weinreebe/kaggle/model.pth')
-
-def load_and_evaluate_model():
-    test_dir = 'd:/microbify/weinreebe/kaggle/test'
-    model_instance = ClassificationModel()
-    model_instance.model.load_state_dict(torch.load('d:/microbify/weinreebe/kaggle/model.pth'))
-    model_instance.evaluate(test_dir, batch_size=256)
-
+def load_and_retrain_model(model_name:str,num_epochs=1):
+    train_dir = 'c:/data/archive/images'
+    model_instance = ClassificationModel(num_classes=9)
+    model_instance.load_model(model_name)
+    model_instance.train(train_dir, batch_size=10, num_epochs=num_epochs)
+    model_instance.save_model(model_name)
+def load_and_evaluate_model(model_name:str):
+    test_dir = 'c:/data/archive/images'
+    model_instance = ClassificationModel(num_classes=9)
+    model_instance.load_model(model_name)
+    model_instance.evaluate(test_dir, batch_size=10)
+def evaluate_image(model_name: str):
+    # Create a hidden Tkinter window
+    root = tk.Tk()
+    root.withdraw()
+    
+    # Open file picker dialog for image selection
+    image_path = filedialog.askopenfilename(
+        title="Select an image",
+        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp"), ("All files", "*.*")]
+    )
+    
+    if not image_path:
+        print("No image selected.")
+        return None
+    
+    model_instance = ClassificationModel(num_classes=9)
+    model_instance.load_model(model_name)
+    result = model_instance.classify_image(image_path)
+    print(f"Predicted class: {result}")
+    return result
 # Example usage:
 if __name__ == '__main__':
-    # For evaluating the model
-    load_and_evaluate_model()  
-    # For predicting a single image, make sure to call predict_single_image with the image path
-    # Example:
-    # classifier = ClassificationModel()
-    # classifier.train_dataset = datasets.ImageFolder('d:/microbify/weinreebe/kaggle/train', transform=classifier.transform)
-    # classifier.predict_single_image('d:/microbify/weinreebe/kaggle/single_image.jpg')
+    evaluate_image('model.pth')
+    # load_and_retrain_model('model.pth',num_epochs=10)
+    # load_and_evaluate_model('model.pth')
+    # load_and_evaluate_model('model.pth')
+    # To classify a single image:
+    # model_instance = ClassificationModel(num_classes=9)
+    # model_instance.model.load_state_dict(torch.load('models/model.pth'))
+    # result = model_instance.classify_image('path/to/your/image.jpg')
+    # print(f"Predicted class: {result}")

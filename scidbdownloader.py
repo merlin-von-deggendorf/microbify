@@ -5,7 +5,7 @@ import time
 import sys
 import concurrent.futures
 
-target = 'd:/microbify/scidb/'
+target = '/Users/apple/Documents/Git_grapeDisease_test/microbify'
 
 # read text file
 with open('grapes.txt', 'r', encoding='utf-8-sig') as data:
@@ -51,7 +51,7 @@ def process_line(line):
             if not os.path.exists(target_folder):
                 os.makedirs(target_folder)
             # download the file using http request
-            response = requests.get(url)
+            response = requests.get(url, verify=False)
             # check if the response is successful
             if not response.ok:
                 if response.status_code == 429:
