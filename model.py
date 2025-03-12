@@ -14,6 +14,9 @@ ssl._create_default_https_context = ssl._create_unverified_context
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(),
+    transforms.RandomVerticalFlip(),
+    transforms.RandomRotation(20),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                          std=[0.229, 0.224, 0.225])
@@ -38,7 +41,7 @@ import torch.optim as optim
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 1
+num_epochs = 25  # Increase the number of epochs
 
 for epoch in range(num_epochs):
     model.train()
@@ -85,7 +88,7 @@ with torch.no_grad():
         print(f"Accuracy: {100 * correct / total}")
 
 # Specify the path to the single image
-image_path = '/Users/apple/Documents/Git_grapeDisease_test/microbify/uploads/0176028.jpg'
+image_path = '/Users/apple/Documents/Git_grapeDisease_test/microbify/uploads/esca_IFV_1.jpg'
 
 # Open the image using PIL
 image = Image.open(image_path).convert('RGB')
