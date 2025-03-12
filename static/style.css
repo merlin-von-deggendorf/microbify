@@ -1,0 +1,69 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Center Content */
+.container {
+    width: 90%;
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    margin-top: 15px;
+    text-decoration: none;
+    color: white;
+    background: #5C67F2;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: 0.3s;
+    cursor: pointer;
+    border: none;
+}
+
+.btn:hover {
+    background: #4a54e1;
+}
+
+/* File Input */
+input[type="file"] {
+    display: none;
+}
+
+.file-btn {
+    background: #ff8c00;
+}
+
+.file-btn:hover {
+    background: #e07b00;
+}
+
+/* Messages */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    color: #d9534f;
+}
+
+/* Back Button */
+.back-btn {
+    background: #777;
+}
+
+.back-btn:hover {
+    background: #555;
+}

@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Welcome to the Image Classification App</h1>
-    <a href="{{ url_for('upload_file') }}">Upload an Image</a>
+    <div class="container">
+        <h1>🍇 Grape Disease Detection</h1>
+        <p>Upload an image of your grape plant to identify potential diseases.</p>
+        <a href="{{ url_for('upload_file') }}" class="btn">Upload an Image</a>
+    </div>
 </body>
 </html>
