@@ -20,18 +20,9 @@ grapes.load_model('grapes')
 def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
-@app.route('/gallery')
-def gallery():
-    # Get list of filenames in the uploads folder.
-    image_folder = os.path.join(app.static_folder, 'galleryimages')
-    images = os.listdir(image_folder) if os.path.exists(image_folder) else []
-    return render_template('imagegallerie.html', images=images)
+# 
 
-@app.route('/get_data')
-def get_data():
-    # Return dynamic JSON data.
-    data = {"message": "Hello from Flask!", "value": 42}
-    return jsonify(data)
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -60,7 +51,12 @@ def upload():
         return jsonify({'message': f'Classified as {result}.'})
     except Exception as e:
         return jsonify({'message': f'Error during classification: {str(e)}'})
-
+# @app.route('/gallery')
+# def gallery():
+#     # Get list of filenames in the uploads folder.
+#     image_folder = os.path.join(app.static_folder, 'galleryimages')
+#     images = os.listdir(image_folder) if os.path.exists(image_folder) else []
+#     return render_template('imagegallerie.html', images=images)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")

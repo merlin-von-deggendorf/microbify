@@ -1,8 +1,6 @@
 function onLoad() {
-    let uploadForm = document.getElementById('upload-form');
     let fileInput = document.getElementById('file-input');
     let dropZone = document.getElementById('drop-zone');
-    let uploadBtn = document.getElementById('upload-btn');
     let previewBg = document.getElementById('preview-bg');
     let outputDiv = document.getElementById('output-div');
 
