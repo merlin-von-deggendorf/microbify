@@ -90,7 +90,7 @@ class ClassificationModel:
         load_path = 'models/' + name + '.pth'
         if not os.path.exists(load_path):
             return False
-        self.model.load_state_dict(torch.load(load_path))
+        self.model.load_state_dict(torch.load(load_path,map_location=self.device))
         return True
     
     def classify_image(self, image_path):
