@@ -19,6 +19,12 @@ grapes.load_model('grapes')
 def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
+@app.route('/gallery')
+def gallery():
+    # Get list of filenames in the uploads folder.
+    image_folder = os.path.join(app.static_folder, 'galleryimages')
+    images = os.listdir(image_folder) if os.path.exists(image_folder) else []
+    return render_template('imagegallerie.html', images=images)
 
 @app.route('/get_data')
 def get_data():
