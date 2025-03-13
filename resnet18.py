@@ -133,29 +133,9 @@ def load_and_evaluate_model(model_name:str):
     model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
     model_instance.evaluate(test_dir, batch_size=10)
-def evaluate_image(model_name: str):
-    # Create a hidden Tkinter window
-    root = tk.Tk()
-    root.withdraw()
-    
-    # Open file picker dialog for image selection
-    image_path = filedialog.askopenfilename(
-        title="Select an image",
-        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp"), ("All files", "*.*")]
-    )
-    
-    if not image_path:
-        print("No image selected.")
-        return None
-    
-    model_instance = ClassificationModel(num_classes=4)
-    model_instance.load_model(model_name)
-    result = model_instance.classify_image(image_path)
-    print(f"Predicted class: {result}")
-    return result
 # Example usage:
 if __name__ == '__main__':
-    # pass
+    pass
     # load_and_retrain_model('grapes',num_epochs=3)
     # load_and_evaluate_model('grapes')
-    evaluate_image('grapes')
+    
