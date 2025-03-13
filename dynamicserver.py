@@ -3,6 +3,7 @@ from flask import Flask, render_template, jsonify, request
 import resnet18
 import io
 from PIL import Image
+import argparse
 
 app = Flask(__name__)
 
@@ -62,4 +63,10 @@ def upload():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    parser = argparse.ArgumentParser(description="Run the Flask server")
+    parser.add_argument('--host', type=str, default='0.0.0.0', help='Hostname to listen on')
+    parser.add_argument('--port', type=int, default=5000, help='Port to listen on')
+    parser.add_argument('--debug', action='store_true', help='Enable debug mode')
+    args = parser.parse_args()
+
+    app.run(debug=args.debug, host=args.host, port=args.port)
