@@ -27,8 +27,8 @@ class ClassificationModel:
         ])
 
         
-        # Initialize the model with a pretrained ResNet18 and adjust the final layer
-        self.model = models.resnet18(pretrained=True)
+        # Initialize the model with a pretrained ResNet18 and adjust the final layer weights=ResNet18_Weights.IMAGENET1K_V1
+        self.model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
         num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(num_ftrs, num_classes)
         self.model = self.model.to(self.device)
@@ -104,6 +104,18 @@ class ClassificationModel:
             int: Predicted class label.
         """
         image = Image.open(image_path).convert("RGB")
+        return self.classify_ram_image(image)
+    def classify_ram_image(self, ram_image):
+        """
+        Classifies a single image and returns the predicted class as an integer.
+        
+        Parameters:
+            image_path (str): Path to the image file.
+        
+        Returns:
+            int: Predicted class label.
+        """
+        image = ram_image.convert("RGB")
         image = self.transform(image).unsqueeze(0)  # Add batch dimension
         self.model.eval()
         with torch.no_grad():
@@ -119,8 +131,8 @@ def load_and_retrain_model(model_name:str,num_epochs=1,batch_size=256):
     model_instance.train(train_dir, batch_size=256, num_epochs=num_epochs)
     model_instance.save_model(model_name)
 def load_and_evaluate_model(model_name:str):
-    test_dir = 'c:/data/archive/images'
-    model_instance = ClassificationModel(num_classes=9)
+    test_dir = 'D:/microbify/weinreebe/kaggle/test'
+    model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
     model_instance.evaluate(test_dir, batch_size=10)
 def evaluate_image(model_name: str):
@@ -145,14 +157,7 @@ def evaluate_image(model_name: str):
     return result
 # Example usage:
 if __name__ == '__main__':
-    # load_and_retrain_model('grapes',num_epochs=1)
+    # pass
+    # load_and_retrain_model('grapes',num_epochs=3)
+    # load_and_evaluate_model('grapes')
     evaluate_image('grapes')
-
-    # load_and_retrain_model('model.pth',num_epochs=10)
-    # load_and_evaluate_model('model.pth')
-    # load_and_evaluate_model('model.pth')
-    # To classify a single image:
-    # model_instance = ClassificationModel(num_classes=9)
-    # model_instance.model.load_state_dict(torch.load('models/model.pth'))
-    # result = model_instance.classify_image('path/to/your/image.jpg')
-    # print(f"Predicted class: {result}")

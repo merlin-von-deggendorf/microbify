@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import torch.nn as nn
 import torchvision.models as models
 from PIL import Image
-import modelmodularized
+import resnet18
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Needed for flashing messages
@@ -24,7 +24,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-grape_model=modelmodularized.ClassificationModel(num_classes=4)
+grape_model=resnet18.ClassificationModel(num_classes=4)
 grape_model.load_model('grapes')
 
 @app.route('/')
