@@ -20,7 +20,6 @@ grapes.load_model('grapes')
 def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
-# 
 
 
 
@@ -46,9 +45,10 @@ def upload():
         
         # Pass the image directly to the classifier.
         # You'll need to update classify_image in resnet18.ClassificationModel to work with a PIL Image.
-        result = grapes.classify_ram_image(image)
+        result_index,result_name = grapes.classify_ram_image(image)
+
         
-        return jsonify({'message': f'Classified as {result}.'})
+        return jsonify({'message': f'{result_name}'})
     except Exception as e:
         return jsonify({'message': f'Error during classification: {str(e)}'})
 # @app.route('/gallery')

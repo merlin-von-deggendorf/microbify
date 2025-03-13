@@ -31,7 +31,7 @@ class ClassificationModel:
         num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(num_ftrs, num_classes)
         self.model = self.model.to(self.device)
-        
+        self.classes = None
         # Set loss function and optimizer
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)    
@@ -80,7 +80,7 @@ class ClassificationModel:
         os.makedirs(model_dir, exist_ok=True)
         save_path = os.path.join(model_dir, 'model.pth')
         torch.save(self.model.state_dict(), save_path)
-        classes_file = os.path.join(model_dir, name + 'classes.json')
+        classes_file = os.path.join(model_dir,'classes.json')
         with open(classes_file, 'w') as f:
             json.dump(self.train_dataset.classes, f)
     
@@ -95,6 +95,13 @@ class ClassificationModel:
         if not os.path.exists(load_path):
             return False
         self.model.load_state_dict(torch.load(load_path,map_location=self.device))
+        self.model.eval()
+        classes_file = os.path.join('models', name,'classes.json')
+        if os.path.exists(classes_file):
+            with open(classes_file, 'r') as f:
+                self.classes = json.load(f)
+        else:
+            self.classes = None
         return True
     
     def classify_image(self, image_path):
@@ -125,7 +132,7 @@ class ClassificationModel:
         with torch.no_grad():
             outputs = self.model(image.to(self.device))
             _, predicted = torch.max(outputs, 1)
-        return predicted.item()
+        return predicted.item(), self.classes[predicted.item()]
     
 
 def load_and_retrain_model(model_name:str,num_epochs=1,batch_size=256):
