@@ -6,8 +6,6 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from PIL import Image
 import os
-import tkinter as tk
-from tkinter import filedialog
 
 class ClassificationModel:
     def __init__(self, devicestr=None, num_classes=4, lr=0.001):
