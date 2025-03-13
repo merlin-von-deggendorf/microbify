@@ -137,5 +137,5 @@ def load_and_evaluate_model(model_name:str):
 if __name__ == '__main__':
     pass
     # load_and_retrain_model('grapes',num_epochs=3)
-    # load_and_evaluate_model('grapes')
+    load_and_evaluate_model('grapes')
     
