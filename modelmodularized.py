@@ -112,11 +112,11 @@ class ClassificationModel:
         return predicted.item()
     
 
-def load_and_retrain_model(model_name:str,num_epochs=1):
-    train_dir = 'c:/data/archive/images'
-    model_instance = ClassificationModel(num_classes=9)
+def load_and_retrain_model(model_name:str,num_epochs=1,batch_size=256):
+    train_dir = 'D:/microbify/weinreebe/kaggle/train'
+    model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
-    model_instance.train(train_dir, batch_size=10, num_epochs=num_epochs)
+    model_instance.train(train_dir, batch_size=256, num_epochs=num_epochs)
     model_instance.save_model(model_name)
 def load_and_evaluate_model(model_name:str):
     test_dir = 'c:/data/archive/images'
@@ -138,14 +138,16 @@ def evaluate_image(model_name: str):
         print("No image selected.")
         return None
     
-    model_instance = ClassificationModel(num_classes=9)
+    model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
     result = model_instance.classify_image(image_path)
     print(f"Predicted class: {result}")
     return result
 # Example usage:
 if __name__ == '__main__':
-    evaluate_image('model.pth')
+    # load_and_retrain_model('grapes',num_epochs=1)
+    evaluate_image('grapes')
+
     # load_and_retrain_model('model.pth',num_epochs=10)
     # load_and_evaluate_model('model.pth')
     # load_and_evaluate_model('model.pth')
