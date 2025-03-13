@@ -10,14 +10,15 @@
 </head>
 
 <body>
-    <div class="container" id="container">
+    <div class="main-div" id="main-div">
+    <div class="upload-div"  id="container" >
         <form id="upload-form" enctype="multipart/form-data">
             <input type="file" name="file" id="file-input">
             <button type="submit" class="btn">Upload File</button>
         </form>
         <a href="{{ url_for('gallery') }}" class="btn">Go to Gallery</a>
     </div>
-
+</div>
 
 </body>
 
