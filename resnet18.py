@@ -135,25 +135,19 @@ class ClassificationModel:
         return predicted.item(), self.classes[predicted.item()]
     
 
-def load_and_retrain_model(model_name:str,num_epochs=1,batch_size=256):
-    train_dir = 'D:/microbify/weinreebe/kaggle/train'
+def load_and_retrain_model(model_name:str,train_dir:str,num_epochs=1,batch_size=256):
     model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
     model_instance.train(train_dir, batch_size=256, num_epochs=num_epochs)
     model_instance.save_model(model_name)
-def load_and_evaluate_model(model_name:str):
-    test_dir = 'D:/microbify/weinreebe/kaggle/test'
-    model_instance = ClassificationModel(num_classes=4)
-    model_instance.load_model(model_name)
-    model_instance.evaluate(test_dir, batch_size=256)
-def full_evaluation(model_name:str):
-    test_dir = 'D:/microbify/weinreebe/kaggle/train'
+def load_and_evaluate_model(model_name:str,test_dir:str):
     model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
     model_instance.evaluate(test_dir, batch_size=256)
 # Example usage:
 if __name__ == '__main__':
-    # load_and_retrain_model('grapes',num_epochs=4)
-    load_and_evaluate_model('grapes')
-    pass
+    # load_and_retrain_model('grapemehltau', 'D:/microbify/weinreebe/mixed', num_epochs=10, batch_size=256)
+    # load_and_evaluate_model('grapemehltau', 'D:/microbify/weinreebe/mixed')
+    # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/scidb', num_epochs=5, batch_size=256)
+    load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/scidb')
     
