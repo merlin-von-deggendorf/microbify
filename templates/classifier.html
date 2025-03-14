@@ -10,13 +10,16 @@
 </head>
 
 <body>
+   
     <div class="main-div" id="main-div">
+        <img src="{{ url_for('static', filename='imgs/logo.avif') }}" alt="Site Logo" class="logo">
         <!-- Drop zone container -->
         <div id="drop-zone" class="drop-zone">
             <!-- Background preview image (initially hidden) -->
             <img class="preview-bg" src="" id="preview-bg">
             <input type="file" name="file" id="file-input" style="display:none;">
         <div class="output-div" id="output-div">
+            Please drop an image file here or click to select one.
         </div>
         </div>
     </div>

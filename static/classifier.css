@@ -1,67 +1,79 @@
+/* Global Styles */
 body {
-    background-color: #a3a3a3;
+    background-color: #f8f9fa; /* A light, neutral background */
     margin: 0;
     height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    font-family: "Arial", sans-serif;
 }
 
+/* Main Container */
 #main-div {
-    background-color: aqua;
-    width: 45rem;
-    height: 45rem;
-    border-radius: 5rem;
-    border: 0.5rem dashed white;
-    box-shadow: 0 0 1.25rem rgba(255, 255, 255, 0.6);
+    background-color: #ffffff;
+    width: 35rem;         /* Reduced width for a more compact, portrait feel */
+    max-width: 90%;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
+    text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    gap: 1.5rem;
 }
 
-/* Drop zone styling */
+/* Drop Zone Styling */
 .drop-zone {
-    position: relative; /* For absolutely positioned children */
-    width: 80%;
-    height: 50%;
-    border: 2px dashed #ffffff;
-    border-radius: 1rem;
+    position: relative;
+    width: 100%;
+    /* Use aspect-ratio to enforce a square shape */
+    aspect-ratio: 1;
+    border: 2px dashed #ccc;
+    border-radius: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-    overflow: hidden; /* Hide overflow of background image */
-    transition: background-color 0.3s;
+    background-color: #fafafa;
+    overflow: hidden;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 .drop-zone.dragover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
 }
 
 /* Preview background image inside drop zone */
 .drop-zone .preview-bg {
     position: absolute;
-    background-color: black;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;   /* Keeps the entire image visible without cropping */
-    z-index: 0;            /* Place behind any drop zone content */
+    object-fit: contain;  /* Shows entire image without cropping */
+    z-index: 0;           /* Places it behind drop zone content */
     pointer-events: none;
-    display: none;
+    display: none;        /* Hidden by default */
 }
 
+/* Output Div (centered text overlay) */
 .output-div {
-    position: absolute;      /* Take absolute positioning within the drop zone */
-    top: 50%;                /* Center vertically */
-    left: 50%;               /* Center horizontally */
-    transform: translate(-50%, -50%);  /* Offset the element to maintain true center */
-    z-index: 1;              /* Ensure it appears above the background preview image */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    font-size: 1.25rem;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
     text-align: center;
-    color: white;            /* Adjust text color as needed */
-    font-size: 3rem;       /* Adjust font size as desired */
-    background-color: rgba(123, 179, 236, 0.695); /* Semi-transparent white background */
+}
+
+.logo {
+    display: block;
+    max-width: 10rem;
+    margin: 1rem auto;
 }
