@@ -6,6 +6,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from PIL import Image
 import os
+import json
 
 class ClassificationModel:
     def __init__(self, devicestr=None, num_classes=4, lr=0.001):
@@ -30,7 +31,7 @@ class ClassificationModel:
         num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(num_ftrs, num_classes)
         self.model = self.model.to(self.device)
-        
+        self.classes = None
         # Set loss function and optimizer
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)    
@@ -75,8 +76,13 @@ class ClassificationModel:
                 print(f"Accuracy: {100 * correct / total}")
     
     def save_model(self, name):
-        save_path = 'models/' + name + '.pth'
+        model_dir = os.path.join('models', name)
+        os.makedirs(model_dir, exist_ok=True)
+        save_path = os.path.join(model_dir, 'model.pth')
         torch.save(self.model.state_dict(), save_path)
+        classes_file = os.path.join(model_dir,'classes.json')
+        with open(classes_file, 'w') as f:
+            json.dump(self.train_dataset.classes, f)
     
     def load_model(self, name):
         """
@@ -85,10 +91,17 @@ class ClassificationModel:
         Parameters:
             name (str): Name of the saved model (without path or extension).
         """
-        load_path = 'models/' + name + '.pth'
+        load_path = 'models/' + name + '/model.pth'
         if not os.path.exists(load_path):
             return False
         self.model.load_state_dict(torch.load(load_path,map_location=self.device))
+        self.model.eval()
+        classes_file = os.path.join('models', name,'classes.json')
+        if os.path.exists(classes_file):
+            with open(classes_file, 'r') as f:
+                self.classes = json.load(f)
+        else:
+            self.classes = None
         return True
     
     def classify_image(self, image_path):
@@ -119,7 +132,7 @@ class ClassificationModel:
         with torch.no_grad():
             outputs = self.model(image.to(self.device))
             _, predicted = torch.max(outputs, 1)
-        return predicted.item()
+        return predicted.item(), self.classes[predicted.item()]
     
 
 def load_and_retrain_model(model_name:str,num_epochs=1,batch_size=256):
@@ -132,10 +145,15 @@ def load_and_evaluate_model(model_name:str):
     test_dir = 'D:/microbify/weinreebe/kaggle/test'
     model_instance = ClassificationModel(num_classes=4)
     model_instance.load_model(model_name)
-    model_instance.evaluate(test_dir, batch_size=10)
+    model_instance.evaluate(test_dir, batch_size=256)
+def full_evaluation(model_name:str):
+    test_dir = 'D:/microbify/weinreebe/kaggle/train'
+    model_instance = ClassificationModel(num_classes=4)
+    model_instance.load_model(model_name)
+    model_instance.evaluate(test_dir, batch_size=256)
 # Example usage:
 if __name__ == '__main__':
+    # load_and_retrain_model('grapes',num_epochs=4)
+    load_and_evaluate_model('grapes')
     pass
-    # load_and_retrain_model('grapes',num_epochs=3)
-    # load_and_evaluate_model('grapes')
     

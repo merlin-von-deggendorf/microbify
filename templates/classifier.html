@@ -10,15 +10,19 @@
 </head>
 
 <body>
-    <div class="container" id="container">
-        <form id="upload-form" enctype="multipart/form-data">
-            <input type="file" name="file" id="file-input">
-            <button type="submit" class="btn">Upload File</button>
-        </form>
-        <a href="{{ url_for('gallery') }}" class="btn">Go to Gallery</a>
+   
+    <div class="main-div" id="main-div">
+        <img src="{{ url_for('static', filename='imgs/logo.avif') }}" alt="Site Logo" class="logo">
+        <!-- Drop zone container -->
+        <div id="drop-zone" class="drop-zone">
+            <!-- Background preview image (initially hidden) -->
+            <img class="preview-bg" src="" id="preview-bg">
+            <input type="file" name="file" id="file-input" style="display:none;">
+        <div class="output-div" id="output-div">
+            Please drop an image file here or click to select one.
+        </div>
+        </div>
     </div>
-
-
 </body>
 
 </html>
