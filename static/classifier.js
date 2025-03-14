@@ -1,51 +1,42 @@
 function onLoad() {
-    let uploadForm = document.getElementById('upload-form');
     let fileInput = document.getElementById('file-input');
-    
-    // Listen for changes to the file input to show a preview.
+    let dropZone = document.getElementById('drop-zone');
+    let previewBg = document.getElementById('preview-bg');
+    let outputDiv = document.getElementById('output-div');
+
+    // When drop zone is clicked, trigger file input.
+    dropZone.addEventListener('click', function(e) {
+        fileInput.click();
+    });
+
+    // When a file is selected, show preview and automatically upload.
     fileInput.addEventListener('change', function(e) {
         let file = e.target.files[0];
         if (file) {
             let reader = new FileReader();
             reader.onload = function(event) {
-                let previewImg = document.getElementById('preview');
-                if (!previewImg) {
-                    previewImg = document.createElement('img');
-                    previewImg.id = 'preview';
-                    previewImg.style.maxWidth = '300px';
-                    previewImg.style.display = 'block';
-                    // Insert the preview image after the file input.
-                    fileInput.parentNode.insertBefore(previewImg, uploadForm.querySelector('button'));
-                }
-                previewImg.src = event.target.result;
+                // Show preview
+                previewBg.src = event.target.result;
+                previewBg.style.display = 'block';
+                
+                // Automatically upload the file to the server.
+                let formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    outputDiv.innerHTML = data.message;
+                })
+                .catch(error => {
+                    outputDiv.innerHTML = 'Error uploading file.';
+                });
             };
             reader.readAsDataURL(file);
         }
-    });
-    
-    // Override the default form submission with a fetch call.
-    uploadForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
-        let formData = new FormData(uploadForm);
-        
-        fetch('/upload', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Display response message from the server
-            let statusDiv = document.getElementById('upload-status');
-            if (!statusDiv) {
-                statusDiv = document.createElement('div');
-                statusDiv.id = 'upload-status';
-                uploadForm.parentNode.appendChild(statusDiv);
-            }
-            statusDiv.innerText = data.message;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
     });
 }
 

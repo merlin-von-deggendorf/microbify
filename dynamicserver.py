@@ -20,18 +20,8 @@ grapes.load_model('grapes')
 def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
-@app.route('/gallery')
-def gallery():
-    # Get list of filenames in the uploads folder.
-    image_folder = os.path.join(app.static_folder, 'galleryimages')
-    images = os.listdir(image_folder) if os.path.exists(image_folder) else []
-    return render_template('imagegallerie.html', images=images)
 
-@app.route('/get_data')
-def get_data():
-    # Return dynamic JSON data.
-    data = {"message": "Hello from Flask!", "value": 42}
-    return jsonify(data)
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -55,12 +45,18 @@ def upload():
         
         # Pass the image directly to the classifier.
         # You'll need to update classify_image in resnet18.ClassificationModel to work with a PIL Image.
-        result = grapes.classify_ram_image(image)
+        result_index,result_name = grapes.classify_ram_image(image)
+
         
-        return jsonify({'message': f'Classified as {result}.'})
+        return jsonify({'message': f'{result_name}'})
     except Exception as e:
         return jsonify({'message': f'Error during classification: {str(e)}'})
-
+# @app.route('/gallery')
+# def gallery():
+#     # Get list of filenames in the uploads folder.
+#     image_folder = os.path.join(app.static_folder, 'galleryimages')
+#     images = os.listdir(image_folder) if os.path.exists(image_folder) else []
+#     return render_template('imagegallerie.html', images=images)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
@@ -68,5 +64,4 @@ if __name__ == '__main__':
     parser.add_argument('--port', type=int, default=5000, help='Port to listen on')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     args = parser.parse_args()
-
     app.run(debug=args.debug, host=args.host, port=args.port)
