@@ -58,6 +58,10 @@ def upload():
 #     images = os.listdir(image_folder) if os.path.exists(image_folder) else []
 #     return render_template('imagegallerie.html', images=images)
 
+@app.route('/production')
+def production():
+    return render_template('production.html')
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
     parser.add_argument('--host', type=str, default='0.0.0.0', help='Hostname to listen on')
