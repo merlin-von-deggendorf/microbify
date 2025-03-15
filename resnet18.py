@@ -154,6 +154,6 @@ def load_and_evaluate_model(model_name:str,test_dir:str):
 if __name__ == '__main__':
     # load_and_retrain_model('grapemehltau', 'D:/microbify/weinreebe/mixed', num_epochs=10, batch_size=256)
     # load_and_evaluate_model('grapemehltau', 'D:/microbify/weinreebe/mixed')
-    # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/scidb', num_epochs=5, batch_size=256)
-    load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/scidb')
+    load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/release', num_epochs=2, batch_size=256)
+    load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/release')
     
