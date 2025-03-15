@@ -97,11 +97,17 @@ class ClassificationModel:
         self.model.load_state_dict(torch.load(load_path,map_location=self.device))
         self.model.eval()
         classes_file = os.path.join('models', name,'classes.json')
+        translation_file = os.path.join('models', name,'translation.json')
         if os.path.exists(classes_file):
             with open(classes_file, 'r') as f:
                 self.classes = json.load(f)
         else:
             self.classes = None
+        if os.path.exists(translation_file):
+            with open(translation_file, 'r') as f:
+                self.translation = json.load(f)
+        else:
+            self.translation = self.classes
         return True
     
     def classify_image(self, image_path):
@@ -132,7 +138,7 @@ class ClassificationModel:
         with torch.no_grad():
             outputs = self.model(image.to(self.device))
             _, predicted = torch.max(outputs, 1)
-        return predicted.item(), self.classes[predicted.item()]
+        return predicted.item(), self.classes[predicted.item()], self.translation[predicted.item()]
     
 
 def load_and_retrain_model(model_name:str,train_dir:str,num_epochs=1,batch_size=256):

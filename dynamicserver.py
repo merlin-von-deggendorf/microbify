@@ -14,7 +14,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 grapes = resnet18.ClassificationModel(num_classes=4)
-grapes.load_model('grapes')
+grapes.load_model('mehltau')
 
 @app.route('/')
 def index():
@@ -45,10 +45,10 @@ def upload():
         
         # Pass the image directly to the classifier.
         # You'll need to update classify_image in resnet18.ClassificationModel to work with a PIL Image.
-        result_index,result_name = grapes.classify_ram_image(image)
+        result_index,result_name,translation = grapes.classify_ram_image(image)
 
         
-        return jsonify({'message': f'{result_name}'})
+        return jsonify({'message': f'{translation}'})
     except Exception as e:
         return jsonify({'message': f'Error during classification: {str(e)}'})
 # @app.route('/gallery')
