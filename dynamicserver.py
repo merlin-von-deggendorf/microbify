@@ -61,6 +61,9 @@ def upload():
 @app.route('/reaktor')
 def production():
     return render_template('reaktor.html')
+@app.route('/calculator')
+def calcualtor():
+    return render_template('calculator.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
