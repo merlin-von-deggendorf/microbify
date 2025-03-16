@@ -58,9 +58,9 @@ def upload():
 #     images = os.listdir(image_folder) if os.path.exists(image_folder) else []
 #     return render_template('imagegallerie.html', images=images)
 
-@app.route('/production')
+@app.route('/reaktor')
 def production():
-    return render_template('production.html')
+    return render_template('reaktor.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
