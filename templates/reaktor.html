@@ -16,6 +16,7 @@
   
 </head>
 <body>
+  {% include "menu.html" %}
     <div id="canvas-container" data-static-url="{{ url_for('static', filename='') }}"></div>
   <script type="module" src="{{ url_for('static', filename='reactor/script.js') }}" defer>
     

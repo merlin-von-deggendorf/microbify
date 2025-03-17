@@ -7,11 +7,6 @@ import argparse
 
 app = Flask(__name__)
 
-# Set the upload folder and create it if it doesn't exist.
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 grapes = resnet18.ClassificationModel(num_classes=4)
 grapes.load_model('mehltau')
@@ -58,11 +53,13 @@ def upload():
 #     images = os.listdir(image_folder) if os.path.exists(image_folder) else []
 #     return render_template('imagegallerie.html', images=images)
 
+
+
 @app.route('/reaktor')
 def production():
     return render_template('reaktor.html')
 @app.route('/calculator')
-def calcualtor():
+def calculator():
     return render_template('calculator.html')
 
 if __name__ == '__main__':
