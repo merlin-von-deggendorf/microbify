@@ -56,10 +56,10 @@ function animate() {
 animate();
 
 function onWindowResize() {
-  const newWidth = window.innerWidth * 0.5;
-  const newHeight = window.innerHeight * 0.5;
-  camera.aspect = newWidth / newHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(newWidth, newHeight);
+    const newWidth = container.clientWidth;
+    const newHeight = container.clientHeight;
+    camera.aspect = newWidth / newHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(newWidth, newHeight);
 }
 window.addEventListener('resize', onWindowResize);

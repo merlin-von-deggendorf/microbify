@@ -1,25 +1,21 @@
 /* Full-width container with background color */
-.menu-container {
-    width: 100%;
-    background-color: #333;
-    padding: 10px 0;
-}
+
 
 /* Centralized inner container with max-width */
 .menu-div {
-    max-width: 960px;
-    margin: 0 auto;
     text-align: center;
+    width: 100%;
+    background-color: #333;
+    margin-bottom: 4rem;
 }
 
 /* Style for the menu items */
 .menu-item {
     display: inline-block;
     color: #fff;
-    padding: 10px 20px;
+    padding: 2rem 3rem;
     text-decoration: none;
     font-family: Arial, sans-serif;
-    transition: background-color 0.3s ease;
 }
 
 /* Hover effect for menu items */

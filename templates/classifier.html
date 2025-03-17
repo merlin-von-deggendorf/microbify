@@ -1,30 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='classifier/style.css') }}">
-    <script src="{{ url_for('static', filename='classifier/script.js') }}"></script>
-    <title>Classifier</title>
-</head>
+{% block title %}Classifier{% endblock %}
 
-<body>
-    {% include "menu.html" %}
-    <div class="wrapper-div" id="wrapper-div">
-        <div class="main-div" id="main-div">
-            <img src="{{ url_for('static', filename='classifier/logo.avif') }}" alt="Site Logo" class="logo">
-            <!-- Drop zone container -->
-            <div id="drop-zone" class="drop-zone">
-                <!-- Background preview image (initially hidden) -->
-                <img class="preview-bg" src="" id="preview-bg">
-                <input type="file" name="file" id="file-input" style="display:none;">
-                <div class="output-div" id="output-div">
-                    Please drop an image file here or click to select one.
-                </div>
-            </div>
+{% block head %}
+  <!-- Classifier-specific CSS and JavaScript -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='classifier/style.css') }}">
+  <script src="{{ url_for('static', filename='classifier/script.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="main-div" id="main-div">
+      <img src="{{ url_for('static', filename='classifier/logo.avif') }}" alt="Site Logo" class="logo">
+      <!-- Drop zone container -->
+      <div id="drop-zone" class="drop-zone">
+        <!-- Background preview image (initially hidden) -->
+        <img class="preview-bg" src="" id="preview-bg">
+        <input type="file" name="file" id="file-input" style="display:none;">
+        <div class="output-div" id="output-div">
+          Please drop an image file here or click to select one.
         </div>
+      </div>
     </div>
-</body>
-
-</html>
+{% endblock %}

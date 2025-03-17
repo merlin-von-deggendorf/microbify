@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Reaktor OBJ/MTL Model with Flask</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='reactor/style.css') }}">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="importmap">
+{% extends "base.html" %}
+
+{% block title %}Reaktor OBJ/MTL Model with Flask{% endblock %}
+
+{% block head %}
+<!-- Reactor-specific CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='reactor/style.css') }}">
+<!-- Import map for Three.js -->
+<script type="importmap">
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three/build/three.module.js",
@@ -13,14 +14,212 @@
       }
     }
   </script>
-  
-</head>
-<body>
-  {% include "menu.html" %}
-    <div id="canvas-container" data-static-url="{{ url_for('static', filename='') }}"></div>
-  <script type="module" src="{{ url_for('static', filename='reactor/script.js') }}" defer>
+<script src="{{ url_for('static', filename='calculator/script.js') }}"></script>
+<style>
+  /* Default: stack vertically */
+  #content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
     
-  </script>
-   
-</body>
-</html>
+  }
+   /* Fixed height for the canvas container */
+   #canvas-container {
+    height: 90vh; /* Adjust height as needed */
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100vw;
+    margin: 2rem auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  /* Ensure the individual containers are full-width (or a reasonable width) when stacked */
+  #canvas-container,
+  .calculator {
+    width: 90%;
+  }
+  
+  /* When display is wider than 30cm, show them side by side */
+  @media (min-width: 30cm) {
+    #content-wrapper {
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    #canvas-container,
+    .calculator {
+      width: 45%;  /* Adjust percentage as needed */
+    }
+  }
+
+  /* Calculator Container */
+  .calculator {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100vw;
+    margin: 2rem auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* Header Styling */
+  .calculator h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333333;
+  }
+
+  /* Input Section Styling */
+  .input-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .input-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555555;
+  }
+
+  /* Input Fields and Textarea */
+  .input-section input[type="number"],
+  .input-section textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cccccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+
+  .input-section input[type="number"]:focus,
+  .input-section textarea:focus {
+    border-color: #007acc;
+    outline: none;
+  }
+
+  /* Button Styling */
+  .input-section button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007acc;
+    border: none;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .input-section button:hover {
+    background-color: #005fa3;
+  }
+
+  /* Virtual Console (Textarea) */
+  #virtualConsole {
+    resize: none;
+    background-color: #f4f4f4;
+    border: 1px solid #cccccc;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- The menu will be included via base.html if defined there -->
+<div id="content-wrapper">
+  <!-- Canvas container for the Reaktor 3D scene -->
+  <div id="canvas-container" data-static-url="{{ url_for('static', filename='') }}"></div>
+
+  <div class="calculator">
+    <h1>E. coli Medium Calculator</h1>
+
+    <div class="input-section">
+      <label for="targetVolume">Culture Volume (mL):</label>
+      <input type="number" id="targetVolume" placeholder="e.g., 1000" value="1000">
+    </div>
+
+    <div class="input-section">
+      <label for="od600">OD₆₀₀:</label>
+      <input type="number" id="od600" step="any" placeholder="e.g., 0.5" value="20">
+    </div>
+
+    <div class="input-section">
+      <label for="conversionFactor">Conversion Factor (cells/mL per OD unit):</label>
+      <input type="number" id="conversionFactor" step="any" placeholder="e.g., 1e9" value="1e9">
+    </div>
+
+    <div class="input-section">
+      <label for="targetCellCount">Total Cell Count:</label>
+      <input type="number" id="targetCellCount" step="any" readonly>
+    </div>
+
+    <div class="input-section">
+      <label for="dryMassConversion">Dry Mass Conversion (picograms/cell):</label>
+      <input type="number" id="dryMassConversion" step="any" placeholder="e.g., 0.3" value="0.3">
+    </div>
+
+    <div class="input-section">
+      <label for="targetDryMass">Total Dry Mass (g):</label>
+      <input type="number" id="targetDryMass" step="any" placeholder="" readonly>
+    </div>
+
+    <!-- M9 Medium Components -->
+    <h2>Medium Components</h2>
+    <div class="input-section">
+      <label for="Na2HPO4">Na₂HPO₄ (g):</label>
+      <input type="number" id="Na2HPO4" step="any" placeholder="e.g., 6.0" value="6.0">
+    </div>
+
+    <div class="input-section">
+      <label for="KH2PO4">KH₂PO₄ (g):</label>
+      <input type="number" id="KH2PO4" step="any" placeholder="e.g., 3.0" value="3.0">
+    </div>
+
+    <div class="input-section">
+      <label for="NaCl">NaCl (g):</label>
+      <input type="number" id="NaCl" step="any" placeholder="e.g., 0.5" value="0.5">
+    </div>
+
+    <div class="input-section">
+      <label for="NH4Cl">NH₄Cl (g):</label>
+      <input type="number" id="NH4Cl" step="any" placeholder="e.g., 1.0" value="1.0">
+    </div>
+
+    <div class="input-section">
+      <label for="MgSO4">MgSO₄·7H₂O (g):</label>
+      <input type="number" id="MgSO4" step="any" placeholder="e.g., 0.24" value="0.24">
+    </div>
+
+    <div class="input-section">
+      <label for="CaCl2">CaCl₂·2H₂O (g):</label>
+      <input type="number" id="CaCl2" step="any" placeholder="e.g., 0.01" value="0.01">
+    </div>
+
+    <div class="input-section">
+      <label for="Glucose">Glucose (g):</label>
+      <input type="number" id="Glucose" step="any" placeholder="e.g., 2.0" value="2.0">
+    </div>
+
+    <!-- Calculate button -->
+    <div class="input-section">
+      <button id="calculateBtn" type="button">Calculate</button>
+    </div>
+
+    <!-- Virtual console textarea -->
+    <div class="input-section">
+      <textarea id="virtualConsole" rows="10" placeholder="Console output..." style="width: 100%;" readonly></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- Reactor-specific JavaScript loaded at the end of content -->
+<script type="module" src="{{ url_for('static', filename='reactor/script.js') }}" defer></script>
+{% endblock %}
