@@ -11,7 +11,7 @@ app = Flask(__name__)
 grapes = resnet18.ClassificationModel(num_classes=4)
 grapes.load_model('mehltau')
 
-@app.route('/')
+@app.route('/classifier')
 def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
@@ -58,6 +58,10 @@ def upload():
 @app.route('/reaktor')
 def production():
     return render_template('reaktor.html')
+
+@app.route('/')
+def wuerze():
+    return render_template('wuerze.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
