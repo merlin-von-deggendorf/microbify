@@ -1,57 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+
+
+
+{% extends "basethd.html" %}
+
+{% block title %}Reaktor OBJ/MTL Model with Flask{% endblock %}
+
+{% block head %}
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Würze</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='wuerze/wuerze.css') }}">
     <script src="{{ url_for('static', filename='wuerze/wuerze.js') }}"></script>
-</head>
-<body>
-    <div class="content">
-        <img src="{{ url_for('static', filename='images/thd.png') }}" alt="Banner" id="banner-image">
-        <form id="stammwuerze-form">
-            <label for="density">Spezifische Dichte:</label>
-            <input type="number" id="density" step="0.001" value="1.050" required>
-            <button type="submit">Berechnen</button>
-            <button type="button" id="reset-button">Zurücksetzen</button>
-        </form>
-        <p id="result"></p>
-        <h2>Beispiele für typische Stammwürzegehalte verschiedener Biersorten:</h2>
-        <table id="stammwuerze-table">
-            <thead>
-                <tr>
-                    <th>Biersorte</th>
-                    <th>Stammwürze von</th>
-                    <th>Stammwürze bis</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>Ale</td><td>10 °P</td><td>14 °P</td></tr>
-                <tr><td>Altbier</td><td>11 °P</td><td>14 °P</td></tr>
-                <tr><td>Barley Wine</td><td>15 °P</td><td>25 °P</td></tr>
-                <tr><td>Berliner Weißbier</td><td>7 °P</td><td>8 °P</td></tr>
-                <tr><td>Doppelbock</td><td>18 °P</td><td></td></tr>
-                <tr><td>Eisbock</td><td>20 °P</td><td></td></tr>
-                <tr><td>Bockbier (hell / dunkel)</td><td>16 °P</td><td>17,9 °P</td></tr>
-                <tr><td>Export</td><td>12 °P</td><td>13,5 °P</td></tr>
-                <tr><td>Gose</td><td>9 °P</td><td>14 °P</td></tr>
-                <tr><td>Helles</td><td>11 °P</td><td>12,8 °P</td></tr>
-                <tr><td>India Pale Ale</td><td>16 °P</td><td>19 °P</td></tr>
-                <tr><td>Kölsch</td><td>10 °P</td><td>12 °P</td></tr>
-                <tr><td>Lagerbier</td><td>11 °P</td><td>14 °P</td></tr>
-                <tr><td>Leichtbier</td><td></td><td>7 °P</td></tr>
-                <tr><td>Märzenbier</td><td>11 °P</td><td>13 °P</td></tr>
-                <tr><td>Pale Ale</td><td>11 °P</td><td>16 °P</td></tr>
-                <tr><td>Pils</td><td>11 °P</td><td>12,3 °P</td></tr>
-                <tr><td>Porter</td><td>16 °P</td><td>19 °P</td></tr>
-                <tr><td>Schwarzbier</td><td>11 °P</td><td></td></tr>
-                <tr><td>Stout</td><td>10 °P</td><td>16 °P</td></tr>
-                <tr><td>Weizenbier (hell / dunkel)</td><td>11 °P</td><td>13 °P</td></tr>
-                <tr><td>Weizenbock</td><td>13 °P</td><td>16 °P</td></tr>
-                <tr><td>Zwickelbier (Kellerbier)</td><td>11 °P</td><td>15 °P</td></tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <form id="stammwuerze-form">
+        <label for="density">Spezifische Dichte:</label>
+        <input type="number" id="density" step="0.001" value="1.050" required>
+        <button type="submit">Berechnen</button>
+        <button type="button" id="reset-button">Zurücksetzen</button>
+    </form>
+    <p id="result"></p>
+    <h2>Beispiele für typische Stammwürzegehalte verschiedener Biersorten:</h2>
+    <table id="stammwuerze-table">
+        <thead>
+            <tr>
+                <th>Biersorte</th>
+                <th>Stammwürze von</th>
+                <th>Stammwürze bis</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Ale</td><td>10 °P</td><td>14 °P</td></tr>
+            <tr><td>Altbier</td><td>11 °P</td><td>14 °P</td></tr>
+            <tr><td>Barley Wine</td><td>15 °P</td><td>25 °P</td></tr>
+            <tr><td>Berliner Weißbier</td><td>7 °P</td><td>8 °P</td></tr>
+            <tr><td>Doppelbock</td><td>18 °P</td><td></td></tr>
+            <tr><td>Eisbock</td><td>20 °P</td><td></td></tr>
+            <tr><td>Bockbier (hell / dunkel)</td><td>16 °P</td><td>17,9 °P</td></tr>
+            <tr><td>Export</td><td>12 °P</td><td>13,5 °P</td></tr>
+            <tr><td>Gose</td><td>9 °P</td><td>14 °P</td></tr>
+            <tr><td>Helles</td><td>11 °P</td><td>12,8 °P</td></tr>
+            <tr><td>India Pale Ale</td><td>16 °P</td><td>19 °P</td></tr>
+            <tr><td>Kölsch</td><td>10 °P</td><td>12 °P</td></tr>
+            <tr><td>Lagerbier</td><td>11 °P</td><td>14 °P</td></tr>
+            <tr><td>Leichtbier</td><td></td><td>7 °P</td></tr>
+            <tr><td>Märzenbier</td><td>11 °P</td><td>13 °P</td></tr>
+            <tr><td>Pale Ale</td><td>11 °P</td><td>16 °P</td></tr>
+            <tr><td>Pils</td><td>11 °P</td><td>12,3 °P</td></tr>
+            <tr><td>Porter</td><td>16 °P</td><td>19 °P</td></tr>
+            <tr><td>Schwarzbier</td><td>11 °P</td><td></td></tr>
+            <tr><td>Stout</td><td>10 °P</td><td>16 °P</td></tr>
+            <tr><td>Weizenbier (hell / dunkel)</td><td>11 °P</td><td>13 °P</td></tr>
+            <tr><td>Weizenbock</td><td>13 °P</td><td>16 °P</td></tr>
+            <tr><td>Zwickelbier (Kellerbier)</td><td>11 °P</td><td>15 °P</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

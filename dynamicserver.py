@@ -60,8 +60,12 @@ def production():
     return render_template('reaktor.html')
 
 @app.route('/')
+@app.route('/wuerze')
 def wuerze():
     return render_template('wuerze.html')
+@app.route('/thdreaktor')
+def thdreaktor():
+    return render_template('reaktorthd.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
