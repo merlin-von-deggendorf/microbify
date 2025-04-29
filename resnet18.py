@@ -24,9 +24,6 @@ class ClassificationModel:
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                 std=[0.229, 0.224, 0.225])
         ])
-
-        
-        # Initialize the model with a pretrained ResNet18 and adjust the final layer weights=ResNet18_Weights.IMAGENET1K_V1
         self.model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
         num_ftrs = self.model.fc.in_features
         self.model.fc = nn.Linear(num_ftrs, num_classes)
@@ -85,12 +82,6 @@ class ClassificationModel:
             json.dump(self.train_dataset.classes, f)
     
     def load_model(self, name):
-        """
-        Loads model weights using the given name and sets the model to evaluation mode.
-        
-        Parameters:
-            name (str): Name of the saved model (without path or extension).
-        """
         load_path = 'models/' + name + '/model.pth'
         if not os.path.exists(load_path):
             return False
@@ -111,27 +102,9 @@ class ClassificationModel:
         return True
     
     def classify_image(self, image_path):
-        """
-        Classifies a single image and returns the predicted class as an integer.
-        
-        Parameters:
-            image_path (str): Path to the image file.
-        
-        Returns:
-            int: Predicted class label.
-        """
         image = Image.open(image_path).convert("RGB")
         return self.classify_ram_image(image)
     def classify_ram_image(self, ram_image):
-        """
-        Classifies a single image and returns the predicted class as an integer.
-        
-        Parameters:
-            image_path (str): Path to the image file.
-        
-        Returns:
-            int: Predicted class label.
-        """
         image = ram_image.convert("RGB")
         image = self.transform(image).unsqueeze(0)  # Add batch dimension
         self.model.eval()
