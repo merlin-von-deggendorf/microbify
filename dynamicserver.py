@@ -11,10 +11,17 @@ app = Flask(__name__)
 grapes = resnet18.ClassificationModel(num_classes=15)
 grapes.load_model('fullmix')
 
+
 @app.route('/classifier')
 def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
+
+@app.route('/')
+@app.route('/newfile')
+def index():
+    # Serve the classifier.html template
+    return render_template('newfile.html')
 
 
 
@@ -59,7 +66,6 @@ def upload():
 def production():
     return render_template('reaktor.html')
 
-@app.route('/')
 @app.route('/wuerze')
 def wuerze():
     return render_template('wuerze.html')
