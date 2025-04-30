@@ -8,8 +8,8 @@ import argparse
 app = Flask(__name__)
 
 
-grapes = resnet18.ClassificationModel(num_classes=4)
-grapes.load_model('mehltau')
+grapes = resnet18.ClassificationModel(num_classes=15)
+grapes.load_model('fullmix')
 
 @app.route('/classifier')
 def index():

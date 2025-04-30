@@ -114,8 +114,8 @@ class ClassificationModel:
         return predicted.item(), self.classes[predicted.item()], self.translation[predicted.item()]
     
 
-def load_and_retrain_model(model_name:str,train_dir:str,num_epochs=1,batch_size=256):
-    model_instance = ClassificationModel(num_classes=4)
+def load_and_retrain_model(model_name:str,train_dir:str,num_epochs=1,batch_size=256,class_count=4):
+    model_instance = ClassificationModel(num_classes=class_count)
     model_instance.load_model(model_name)
     model_instance.train(train_dir, batch_size=256, num_epochs=num_epochs)
     model_instance.save_model(model_name)
@@ -129,5 +129,6 @@ if __name__ == '__main__':
     # load_and_evaluate_model('grapemehltau', 'D:/microbify/weinreebe/mixed')
     # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/release', num_epochs=2, batch_size=256)
     # load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/release')
+    load_and_retrain_model('fullmix', 'D:/microbify/PlantVillage/', num_epochs=2, batch_size=256, class_count=15)
     pass
     
