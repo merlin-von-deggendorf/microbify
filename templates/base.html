@@ -51,9 +51,11 @@
 <body>
   <div class="menu-div" id="menu-div">
     <div class="banner">
-      <!-- <img src="{{ url_for('static', filename='classifier/logo.avif') }}" alt="Site Banner"> -->
-       <h1>Deep Learning Course 2025 Wahl</h1>
+      <img src="{{ url_for('static', filename='classifier/logo.avif') }}" alt="Site Banner">
     </div>
+    <a href="{{ url_for('index') }}" class="menu-item">Mehltau-Detektor</a>
+    <a href="{{ url_for('production') }}" class="menu-item">Reaktor</a>
+    <a href="{{ url_for('wuerze') }}" class="menu-item">THD Stammwürze-Rechner</a>
   </div>
   <div class="content">
     {% block content %}
