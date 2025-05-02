@@ -87,19 +87,23 @@ class ClassificationModel:
             return False
         self.model.load_state_dict(torch.load(load_path,map_location=self.device))
         self.model.eval()
+        self.classes, self.translation = self.load_classes(name)
+    
+    @staticmethod
+    def load_classes(name):
+        classes=None
+        translation=None
         classes_file = os.path.join('models', name,'classes.json')
         translation_file = os.path.join('models', name,'translation.json')
         if os.path.exists(classes_file):
             with open(classes_file, 'r') as f:
-                self.classes = json.load(f)
-        else:
-            self.classes = None
+                classes = json.load(f)
         if os.path.exists(translation_file):
             with open(translation_file, 'r') as f:
-                self.translation = json.load(f)
+                translation = json.load(f)
         else:
-            self.translation = self.classes
-        return True
+            translation = classes
+        return classes, translation
     
     def classify_image(self, image_path):
         image = Image.open(image_path).convert("RGB")
@@ -129,6 +133,7 @@ if __name__ == '__main__':
     # load_and_evaluate_model('grapemehltau', 'D:/microbify/weinreebe/mixed')
     # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/release', num_epochs=2, batch_size=256)
     # load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/release')
-    load_and_retrain_model('fullmix', 'D:/microbify/PlantVillage/', num_epochs=2, batch_size=256, class_count=15)
+    # load_and_retrain_model('fullmix', 'D:/microbify/PlantVillage/', num_epochs=2, batch_size=256, class_count=15)
+    load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=2, batch_size=256, class_count=23)
     pass
     

@@ -7,9 +7,10 @@ import argparse
 
 app = Flask(__name__)
 
-
-grapes = resnet18.ClassificationModel(num_classes=15)
-grapes.load_model('fullmix')
+model_name = 'fullmix'
+classes,trans=resnet18.ClassificationModel.load_classes(model_name)
+grapes = resnet18.ClassificationModel(num_classes=len(classes))
+grapes.load_model(model_name)
 
 
 @app.route('/classifier')
@@ -17,9 +18,8 @@ def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
 
-@app.route('/')
 @app.route('/newfile')
-def index():
+def newfile():
     # Serve the classifier.html template
     return render_template('newfile.html')
 
@@ -72,6 +72,12 @@ def wuerze():
 @app.route('/thdreaktor')
 def thdreaktor():
     return render_template('reaktorthd.html')
+
+@app.route('/')
+@app.route('/wahl')
+def wahl():
+    # Serve the classifier.html template
+    return render_template('wahl.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Flask server")
