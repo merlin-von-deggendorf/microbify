@@ -13,6 +13,7 @@ grapes = resnet18.ClassificationModel(num_classes=len(classes))
 grapes.load_model(model_name)
 
 
+@app.route('/')
 @app.route('/classifier')
 def index():
     # Serve the classifier.html template
@@ -73,7 +74,6 @@ def wuerze():
 def thdreaktor():
     return render_template('reaktorthd.html')
 
-@app.route('/')
 @app.route('/wahl')
 def wahl():
     # Serve the classifier.html template
