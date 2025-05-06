@@ -19,6 +19,12 @@ def index():
     # Serve the classifier.html template
     return render_template('classifier.html')
 
+@app.route('/home')
+def home():
+    # Serve the classifier.html template
+    return render_template('home.html')
+
+
 @app.route('/newfile')
 def newfile():
     # Serve the classifier.html template
