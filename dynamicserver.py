@@ -25,10 +25,10 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/newfile')
-def newfile():
+@app.route('/reaktor')
+def reaktor():
     # Serve the classifier.html template
-    return render_template('newfile.html')
+    return render_template('reaktor.html')
 
 
 
