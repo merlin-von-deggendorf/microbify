@@ -158,7 +158,7 @@ if __name__ == '__main__':
     # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/release', num_epochs=2, batch_size=256)
     # load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/release')
     # load_and_retrain_model('fullmix', 'D:/microbify/PlantVillage/', num_epochs=2, batch_size=256, class_count=15)
-    load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=2, batch_size=400, class_count=27)
-    # load_and_evaluate_model('fullmix', 'D:/microbify/aggregate/',27, batch_size=400, rate=0.1)
-    pass
+    # load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=4, batch_size=400, class_count=27)
+    load_and_evaluate_model('fullmix', 'D:/microbify/aggregate/',27, batch_size=400, rate=0.1)
+  
     
