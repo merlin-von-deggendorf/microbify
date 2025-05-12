@@ -1,8 +1,5 @@
-{% extends "base.html" %}
-
-{% block title %}Reaktor OBJ/MTL Model with Flask{% endblock %}
-
-{% block head %}
+{% extends "base2.html" %}
+{% block content %}
 <!-- Reactor-specific CSS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='reactor/style.css') }}">
 <!-- Import map for Three.js -->
@@ -130,9 +127,7 @@
     font-size: 0.9rem;
   }
 </style>
-{% endblock %}
 
-{% block content %}
 <!-- The menu will be included via base.html if defined there -->
 <div id="content-wrapper">
   <!-- Canvas container for the Reaktor 3D scene -->
@@ -222,4 +217,6 @@
 
 <!-- Reactor-specific JavaScript loaded at the end of content -->
 <script type="module" src="{{ url_for('static', filename='reactor/script.js') }}" defer></script>
+
+
 {% endblock %}
