@@ -16,10 +16,26 @@ class ClassificationModel:
             self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         else:
             self.device = torch.device(devicestr)
-        self.transform = transforms.Compose([
+        self.train_transform  =transforms.Compose([
+                transforms.Resize(256),                      # make the smaller edge 256px
+                transforms.CenterCrop(224),                  # or RandomResizedCrop(224) for more variation
+                transforms.RandomHorizontalFlip(p=0.5),      # randomly flip left↔right
+                transforms.RandomRotation(degrees=15),       # rotate ±15°
+                transforms.ColorJitter(                     # random brightness/contrast/saturation
+                    brightness=0.4,
+                    contrast=0.4,
+                    saturation=0.4,
+                    hue=0.1
+                ),
+                transforms.ToTensor(),                       # now turn PIL → [0–1] tensor
+                transforms.Normalize(                        # finally normalize channels
+                    mean=[0.485, 0.456, 0.406],
+                    std =[0.229, 0.224, 0.225]
+                ),
+            ])
+        self.predict_transform = transforms.Compose([
             transforms.Resize(256),            # Resize the smaller edge to 256 while keeping the aspect ratio.
             transforms.CenterCrop(224),        # Crop the center 224x224 region.
-            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                 std=[0.229, 0.224, 0.225])
@@ -35,7 +51,7 @@ class ClassificationModel:
     
     def train(self, train_dir, batch_size, num_epochs=1):
         # ...existing code to train...
-        self.train_dataset = datasets.ImageFolder(train_dir, transform=self.transform)
+        self.train_dataset = datasets.ImageFolder(train_dir, transform=self.train_transform)
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
         for epoch in range(num_epochs):
             self.model.train()
@@ -55,9 +71,14 @@ class ClassificationModel:
                 running_loss += loss.item()
             print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss / total_iterations}")
     
-    def evaluate(self, test_dir, batch_size):
+    def evaluate(self, test_dir, batch_size,rate=1):
         # ...existing code to evaluate...
-        self.test_dataset = datasets.ImageFolder(test_dir, transform=self.transform)
+        self.test_dataset = datasets.ImageFolder(test_dir, transform=self.predict_transform)
+        # if rate <1: split the dataset
+        if rate < 1:
+            test_size = int(len(self.test_dataset) * rate)
+            indices = torch.randperm(len(self.test_dataset))[:test_size]
+            self.test_dataset = torch.utils.data.Subset(self.test_dataset, indices)
         self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False)
         self.model.eval()
         correct = 0
@@ -118,15 +139,15 @@ class ClassificationModel:
         return predicted.item(), self.classes[predicted.item()], self.translation[predicted.item()]
     
 
-def load_and_retrain_model(model_name:str,train_dir:str,num_epochs=1,batch_size=256,class_count=4):
+def load_and_retrain_model(model_name:str,train_dir:str,num_epochs=1,batch_size=400,class_count=4):
     model_instance = ClassificationModel(num_classes=class_count)
     model_instance.load_model(model_name)
-    model_instance.train(train_dir, batch_size=256, num_epochs=num_epochs)
+    model_instance.train(train_dir, batch_size=batch_size, num_epochs=num_epochs)
     model_instance.save_model(model_name)
-def load_and_evaluate_model(model_name:str,test_dir:str):
-    model_instance = ClassificationModel(num_classes=4)
+def load_and_evaluate_model(model_name:str,test_dir:str,num_classes,batch_size=400,rate=1):
+    model_instance = ClassificationModel(num_classes=num_classes)
     model_instance.load_model(model_name)
-    model_instance.evaluate(test_dir, batch_size=256)
+    model_instance.evaluate(test_dir, batch_size=batch_size,rate=rate)
 # Example usage:
 if __name__ == '__main__':
     # load_and_retrain_model('grapemehltau', 'D:/microbify/weinreebe/mixed', num_epochs=10, batch_size=256)
@@ -134,6 +155,7 @@ if __name__ == '__main__':
     # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/release', num_epochs=2, batch_size=256)
     # load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/release')
     # load_and_retrain_model('fullmix', 'D:/microbify/PlantVillage/', num_epochs=2, batch_size=256, class_count=15)
-    load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=2, batch_size=256, class_count=23)
+    load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=2, batch_size=400, class_count=27)
+    # load_and_evaluate_model('fullmix', 'D:/microbify/aggregate/',27, batch_size=400, rate=0.1)
     pass
     
