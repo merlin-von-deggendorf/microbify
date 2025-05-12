@@ -14,10 +14,22 @@ grapes.load_model(model_name)
 
 
 @app.route('/')
-@app.route('/classifier')
+@app.route('/index')
 def index():
     # Serve the classifier.html template
-    return render_template('classifier.html')
+    return render_template('index.html')
+@app.route('/contact')
+def contact():
+    # Serve the classifier.html template
+    return render_template('contact.html')
+@app.route('/articles')
+def articles():
+    # Serve the classifier.html template
+    return render_template('articles.html')
+@app.route('/analyse')
+def analyse():
+    # Serve the classifier.html template
+    return render_template('analyse.html')
 
 @app.route('/home')
 def home():

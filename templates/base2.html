@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microbify - Smart Fungal Detection</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/styles.css') }}">
 </head>
 
 <body>
@@ -13,10 +13,10 @@
         <p>Smart Fungal Detection and Treatment Management</p>
     </header>
     <nav>
-        <a href="index.html">Home</a>
-        <a href="analyse.html">Analyse the Plant</a>
-        <a href="contact.html">Contact Us</a>
-        <a href="articles.html">Articles</a>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('analyse') }}">Analyse the Plant</a>
+        <a href="{{ url_for('contact') }}">Contact Us</a>
+        <a href="{{ url_for('articles') }}">Articles</a>
     </nav>
     <main>
         {% block content %}

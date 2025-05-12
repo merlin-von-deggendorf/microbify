@@ -124,6 +124,9 @@ class ClassificationModel:
                 translation = json.load(f)
         else:
             translation = classes
+        # make sure the length of classes and translation is the same
+        if len(classes) != len(translation):
+            raise ValueError(f"Length of classes ({len(classes)}) and translation ({len(translation)}) do not match.")
         return classes, translation
     
     def classify_image(self, image_path):
@@ -131,7 +134,7 @@ class ClassificationModel:
         return self.classify_ram_image(image)
     def classify_ram_image(self, ram_image):
         image = ram_image.convert("RGB")
-        image = self.transform(image).unsqueeze(0)  # Add batch dimension
+        image = self.predict_transform(image).unsqueeze(0)  # Add batch dimension
         self.model.eval()
         with torch.no_grad():
             outputs = self.model(image.to(self.device))

@@ -1,23 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Articles - Microbify</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<header>
-    <h1>Articles</h1>
-    <p>Latest Research and News</p>
-</header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="analyse.html">Analyse the Plant</a>
-    <a href="contact.html">Contact Us</a>
-    <a href="articles.html">Articles</a>
-</nav>
-<main>
-    <article>
+{% extends "base2.html" %}
+{% block content %}
+  <article>
         <h2>How AI is Changing Agriculture</h2>
         <p>AI and machine learning are revolutionizing the way farmers approach crop disease detection and treatment...</p>
     </article>
@@ -31,9 +14,4 @@
         <h2>Case Study: Farmers Using the Microbify App</h2>
         <p>Early trials in Germany have shown a 40% reduction in fungal outbreaks using our mobile app and treatment solutions...</p>
     </article>
-</main>
-<footer>
-    © 2025 Microbify | Read more at blog.microbify.de
-</footer>
-</body>
-</html>
+{% endblock %}
