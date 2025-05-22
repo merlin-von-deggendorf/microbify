@@ -7,7 +7,7 @@ import argparse
 
 app = Flask(__name__)
 
-model_name = 'fullmix'
+model_name = 'simplified'
 classes,trans=resnet18.ClassificationModel.load_classes(model_name)
 grapes = resnet18.ClassificationModel(num_classes=len(classes))
 grapes.load_model(model_name)

@@ -92,6 +92,7 @@ class ClassificationModel:
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
                 print(f"Accuracy: {100 * correct / total}")
+                
     
     def save_model(self, name):
         model_dir = os.path.join('models', name)
@@ -157,8 +158,8 @@ if __name__ == '__main__':
     # load_and_evaluate_model('grapemehltau', 'D:/microbify/weinreebe/mixed')
     # load_and_retrain_model('mehltau', 'D:/microbify/weinreebe/release', num_epochs=2, batch_size=256)
     # load_and_evaluate_model('mehltau', 'D:/microbify/weinreebe/release')
-    # load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=4, batch_size=400, class_count=27)
-    load_and_retrain_model('fullmix', 'D:/microbify/aggregatebias/', num_epochs=1, batch_size=400, class_count=27)
+    load_and_retrain_model('fullmix', 'D:/microbify/aggregate/', num_epochs=4, batch_size=400, class_count=27)
+    # load_and_retrain_model('fullmix', 'D:/microbify/aggregatebias/', num_epochs=1, batch_size=400, class_count=27)
     # load_and_evaluate_model('fullmix', 'D:/microbify/aggregate/',27, batch_size=400, rate=0.1)
     # load_and_retrain_model('simplified', 'D:/microbify/PlantVillage/', num_epochs=10, batch_size=400, class_count=15)
     # load_and_evaluate_model('simplified', 'D:/microbify/PlantVillage/',15, batch_size=400, rate=0.1)
