@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 import resnet18
 import io
 from PIL import Image
@@ -85,8 +85,17 @@ def upload():
 #     images = os.listdir(image_folder) if os.path.exists(image_folder) else []
 #     return render_template('imagegallerie.html', images=images)
 
+@app.route('/newpage')
+def newpage():
+    return render_template('newpage.html')
 
-
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 @app.route('/reaktor')
 def production():
     return render_template('reaktor.html')
