@@ -5,15 +5,20 @@
 {% endblock %}
 
 {% block content %}
-    <p>Use this section to upload a plant image. Our AI model will analyze it and recommend a treatment.</p>
+ <link rel="stylesheet" href="{{ url_for('static', filename='classifier/style.css') }}">
+<script src="{{ url_for('static', filename='classifier/script.js') }}"></script>
 
-    <form>
-        <label for="plantImage">Upload Plant Image:</label><br><br>
-        <input type="file" id="plantImage" name="plantImage" accept="image/*"><br><br>
-        <button type="submit">Analyse</button>
-    </form>
-
-    <p>Feature coming soon: Real-time fungal detection using AI!</p>
+      <div class="main-div" id="main-div">
+      <!-- Drop zone container -->
+      <div id="drop-zone" class="drop-zone">
+        <!-- Background preview image (initially hidden) -->
+        <img class="preview-bg" src="" id="preview-bg">
+        <input type="file" name="file" id="file-input" style="display:none;">
+        <div class="output-div" id="output-div">
+          Please drop an image file here or click to select one.
+        </div>
+      </div>
+    </div>
 {% endblock %}
 
 
