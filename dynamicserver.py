@@ -26,6 +26,10 @@ def contact():
 def articles():
     # Serve the classifier.html template
     return render_template('articles.html')
+@app.route('/about_us')
+def about_us():
+    # Serve the classifier.html template
+    return render_template('about_us.html')
 @app.route('/analyse')
 def analyse():
     # Serve the classifier.html template

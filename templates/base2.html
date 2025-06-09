@@ -5,18 +5,19 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microbify - Smart Fungal Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <header>
-        <h1>Welcome to Microbify</h1>
-        <p>Smart Fungal Detection and Treatment Management</p>
+               {% block head %}
+        {% endblock %}
     </header>
     <nav>
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('analyse') }}">Analyse the Plant</a>
         <a href="{{ url_for('contact') }}">Contact Us</a>
-        <a href="{{ url_for('articles') }}">Articles</a>
+        <a href="{{ url_for('about_us') }}">Articles</a>
     </nav>
     <main>
         {% block content %}
