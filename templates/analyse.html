@@ -1,23 +1,10 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Analyse the Plant - Microbify</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<header>
+{% extends "base2.html" %}
+{% block head %}
     <h1>Analyse the Plant</h1>
     <p>Upload a Plant Image for Fungal Detection</p>
-</header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="analyse.html">Analyse the Plant</a>
-    <a href="contact.html">Contact Us</a>
-    <a href="about us.html">About Us</a>
-</nav>
-<main>
+{% endblock %}
+
+{% block content %}
     <p>Use this section to upload a plant image. Our AI model will analyze it and recommend a treatment.</p>
 
     <form>
@@ -27,10 +14,6 @@
     </form>
 
     <p>Feature coming soon: Real-time fungal detection using AI!</p>
-</main>
-<footer>
-    © 2025 Microbify | Smart Plant Care
-</footer>
-</body>
-</html>
+{% endblock %}
+
 

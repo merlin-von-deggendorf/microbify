@@ -1,24 +1,11 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Contact Us - Microbify</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<header>
+{% extends "base2.html" %}
+{% block head %}
     <h1>Contact Us</h1>
     <p>We'd love to hear from you!</p>
-</header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="analyse.html">Analyse the Plant</a>
-    <a href="contact.html">Contact Us</a>
-    <a href="about us.html">About Us</a>
-</nav>
-<main>
-    <p class="description">
+{% endblock %}
+
+{% block content %}
+ <p class="description">
       Whether you're a farmer looking for support, a partner interested in collaboration, or just curious about what we do our team is here to help.
     </p>
 
@@ -59,10 +46,4 @@
 
         <button type="submit">Send Message</button>
     </form>
-</main>
-<footer>
-    © 2025 Microbify | Contact us at info@microbify.de
-</footer>
-</body>
-</html>
-
+{% endblock %}
