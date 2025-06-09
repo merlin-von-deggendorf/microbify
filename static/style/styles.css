@@ -1,22 +1,55 @@
 /* Base Styling */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
+    font-family: 'Poppins', sans-serif;
+    background-color: #ecf9ec;
     color: #333;
 }
 
 /* Header */
-header {
-    background-color: #1e3d59;
+/* header {
+    background-color: #006620;
     padding: 20px;
     color: white;
     text-align: center;
+} */
+header {
+    position: relative;
+    background-image: url('4.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 60px 20px;
+    color: white;
+    text-align: center;
+    min-height: 200px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.15); /* تیرگی خیلی ملایم */
+    z-index: 0;
+}
+
+header * {
+    position: relative;
+    z-index: 1;
+}
+
+
 
 /* Navigation */
 nav {
-    background-color: #1e3d59;
+    background-color: #006620;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -66,7 +99,7 @@ textarea {
 }
 
 button {
-    background-color: #1e3d59;
+    background-color: #006620;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -86,7 +119,7 @@ button:hover {
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #1e3d59;
+    background-color: #006620;
     color: white;
     position: relative;
     bottom: 0;
